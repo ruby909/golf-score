@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>115年春季賽-最終修復版</title>
+    <title>115年春季會內賽</title>
     <style>
         :root { --primary: #2d5a27; --accent: #d32f2f; }
         body { font-family: -apple-system, sans-serif; background: #f0f2f0; margin: 0; padding: 5px; }
@@ -13,23 +13,18 @@
         .btn { padding: 8px 12px; font-size: 14px; border-radius: 15px; border: none; color: white; font-weight: bold; cursor: pointer; }
         .btn-rank { background: var(--accent); }
         .btn-print { background: #1976d2; }
-        
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         th { background: var(--primary); color: white; padding: 5px 2px; font-size: 12px; }
         td { border-bottom: 1px solid #eee; padding: 6px 2px; text-align: center; vertical-align: middle; }
-        
-        /* 寬度控制 */
         .col-rank { width: 30px; }
-        .col-info { width: 75px; text-align: left; padding-left: 2px; }
+        .col-info { width: 80px; text-align: left; padding-left: 2px; }
         .col-score { width: 50px; }
         .col-total { width: 40px; }
-        
-        .name-text { font-size: 14px; font-weight: bold; display: block; white-space: nowrap; }
+        .name-text { font-size: 14px; font-weight: bold; display: block; }
         .sub-info { font-size: 10px; color: #666; display: block; line-height: 1.2; }
         input[type="number"] { width: 44px; height: 32px; border: 1px solid #ccc; border-radius: 4px; text-align: center; font-size: 17px; }
         .total-cell { font-weight: bold; color: var(--accent); font-size: 15px; }
         .print-val { display: none; }
-
         @media print {
             .no-print, .action-bar, .btn-clear { display: none !important; }
             .print-val { display: inline !important; font-weight: bold; }
@@ -40,7 +35,6 @@
     </style>
 </head>
 <body>
-
 <div class="container">
     <div class="header"><h1>⛳ 115 年春季會內賽成績表</h1></div>
     <div class="action-bar no-print">
@@ -50,21 +44,13 @@
     </div>
     <table id="mainTable">
         <thead>
-            <tr>
-                <th class="col-rank">名次</th>
-                <th class="col-info">選手</th>
-                <th class="col-score">球1</th>
-                <th class="col-score">球2</th>
-                <th class="col-total">總分</th>
-                <th class="col-score">HIO</th>
-            </tr>
+            <tr><th class="col-rank">名</th><th class="col-info">選手/生日</th><th class="col-score">球1</th><th class="col-score">球2</th><th class="col-total">總分</th><th class="col-score">HIO</th></tr>
         </thead>
         <tbody id="tableBody"></tbody>
     </table>
 </div>
 
 <script>
-    // 嚴格校對名單 - 確保無格式錯誤
     const players = [
         {name:"陳浩華", bday:"39.12.21", group:"1-1"}, {name:"黃麗卿", bday:"33.11.28", group:"1-2"}, {name:"李香蘭", bday:"39.12.30", group:"1-3"}, {name:"涂金葉", bday:"36.08.17", group:"1-4"}, {name:"黃一文", bday:"44.12.18", group:"1-5"}, {name:"葛修立", bday:"41.07.26", group:"1-6"}, {name:"王國明", bday:"49.11.29", group:"1-7"}, {name:"溫三郎", bday:"30.09.02", group:"1-8"},
         {name:"夏淑定", bday:"50.02.04", group:"2-1"}, {name:"徐富美", bday:"34.07.08", group:"2-2"}, {name:"林育堂", bday:"51.01.17", group:"2-3"}, {name:"李日伸", bday:"43.06.05", group:"2-4"}, {name:"周正窓", bday:"46.12.06", group:"2-5"}, {name:"吳銘展", bday:"50.04.09", group:"2-6"}, {name:"陳鑾鳳", bday:"36.02.02", group:"2-7"}, {name:"高秀蘭", bday:"37.04.08", group:"2-8"},
@@ -80,13 +66,12 @@
         {name:"廖進忠", bday:"38.06.30", group:"12-1"}, {name:"廖 耍", bday:"44.11.08", group:"12-2"}, {name:"孫武復", bday:"36.01.10", group:"12-3"}, {name:"吳柏毅", bday:"45.01.05", group:"12-4"}, {name:"陳龍文", bday:"39.08.14", group:"12-5"}, {name:"姜彩花", bday:"49.10.19", group:"12-6"}, {name:"李正喜", bday:"30.09.05", group:"12-7"}, {name:"連寬仁", bday:"32.06.03", group:"12-8"}
     ];
 
-    const STORE_KEY = 'golf_vFinal_Print';
+    const STORE_KEY = 'golf_final_v100';
 
     function init() {
         const tbody = document.getElementById('tableBody');
         tbody.innerHTML = '';
         const saved = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
-        
         players.forEach(p => {
             const key = p.name + p.group;
             const d = saved[key] || {s1:'', s2:'', hio:0};
@@ -95,10 +80,7 @@
             row.setAttribute('data-key', key);
             row.innerHTML = `
                 <td class="rank-cell">-</td>
-                <td class="col-info">
-                    <span class="name-text">${p.name}</span>
-                    <span class="sub-info">${p.group} | ${p.bday}</span>
-                </td>
+                <td class="col-info"><span class="name-text">${p.name}</span><span class="sub-info">${p.group} | ${p.bday}</span></td>
                 <td><input type="number" class="s1" value="${d.s1}" oninput="sv(this);sum(this);nx(this)"><span class="print-val s1-v">${d.s1}</span></td>
                 <td><input type="number" class="s2" value="${d.s2}" oninput="sv(this);sum(this);nx(this)"><span class="print-val s2-v">${d.s2}</span></td>
                 <td class="total-cell">-</td>
@@ -112,11 +94,7 @@
     function sv(el) {
         const r = el.closest('tr');
         const s = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
-        s[r.getAttribute('data-key')] = {
-            s1: r.querySelector('.s1').value,
-            s2: r.querySelector('.s2').value,
-            hio: r.querySelector('.hio').value
-        };
+        s[r.getAttribute('data-key')] = { s1: r.querySelector('.s1').value, s2: r.querySelector('.s2').value, hio: r.querySelector('.hio').value };
         localStorage.setItem(STORE_KEY, JSON.stringify(s));
     }
 
@@ -131,55 +109,32 @@
     function calculateRank() {
         const rs = Array.from(document.querySelectorAll('#tableBody tr'));
         const dt = rs.map(r => {
-            const s1 = r.querySelector('.s1').value;
-            const s2 = r.querySelector('.s2').value;
+            const s1 = r.querySelector('.s1').value, s2 = r.querySelector('.s2').value;
             const t = (parseInt(s1)||0) + (parseInt(s2)||0);
             const isDNF = (s1 === '' || s2 === '');
-            
-            r.querySelector('.s1-v').innerText = s1;
-            r.querySelector('.s2-v').innerText = s2;
+            r.querySelector('.s1-v').innerText = s1; r.querySelector('.s2-v').innerText = s2;
             r.querySelector('.hio-v').innerText = r.querySelector('.hio').value;
-
             return { r, t: isDNF ? 99999 : t, h: parseInt(r.querySelector('.hio').value)||0, b: r.getAttribute('data-bday'), isDNF };
         });
-
         dt.sort((a,b) => a.t - b.t || b.h - a.h || a.b.localeCompare(b.b));
-        
-        const b = document.getElementById('tableBody');
-        b.innerHTML = '';
-        dt.forEach((it, i) => {
-            it.r.querySelector('.rank-cell').innerText = it.isDNF ? "-" : (i+1);
-            b.appendChild(it.r);
-        });
+        const b = document.getElementById('tableBody'); b.innerHTML = '';
+        dt.forEach((it, i) => { it.r.querySelector('.rank-cell').innerText = it.isDNF ? "-" : (i+1); b.appendChild(it.r); });
         return dt;
     }
 
     function handlePrint() {
         const dt = calculateRank();
         const tbody = document.getElementById('tableBody');
-        
-        // 過濾只留下有成績的人
         const finished = dt.filter(it => !it.isDNF);
-        if(finished.length === 0) return alert("尚未輸入任何成績");
-
-        // 備份原始所有行
-        const allRows = Array.from(tbody.querySelectorAll('tr'));
-        
-        // 畫面上只留完賽者
+        if(finished.length === 0) return alert("沒有完成數據");
+        const all = Array.from(tbody.querySelectorAll('tr'));
         tbody.innerHTML = '';
         finished.forEach(it => tbody.appendChild(it.r));
-
         window.print();
-
-        // 列印完畢後，恢復顯示所有選手，讓使用者繼續輸入
-        setTimeout(() => {
-            tbody.innerHTML = '';
-            allRows.forEach(row => tbody.appendChild(row));
-        }, 500);
+        setTimeout(() => { tbody.innerHTML = ''; all.forEach(row => tbody.appendChild(row)); }, 500);
     }
 
-    function clearData() { if(confirm("確定清空所有分數？")) { localStorage.removeItem(STORE_KEY); location.reload(); } }
-
+    function clearData() { if(confirm("確定清空？")) { localStorage.removeItem(STORE_KEY); location.reload(); } }
     init();
 </script>
 </body>
