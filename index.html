@@ -3,24 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>115年春季會內賽-導航優化版</title>
+    <title>115年春季會內賽-彈性計分版</title>
     <style>
         :root { --primary: #1b4332; --accent: #d32f2f; --bg: #f8fafc; --invalid: #ffe4e6; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding: 0; }
-        
-        /* 導覽功能區 */
         .sticky-header { position: sticky; top: 0; z-index: 1000; background: white; border-bottom: 2px solid #cbd5e1; padding: 8px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .nav-bar { display: flex; overflow-x: auto; gap: 6px; padding: 5px 12px; }
         .nav-bar::-webkit-scrollbar { display: none; }
         .nav-btn { flex: 0 0 auto; width: 40px; height: 40px; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; font-weight: bold; color: var(--primary); cursor: pointer; }
-        .nav-btn:active { background: #e2e8f0; }
-
         .action-bar { display: flex; justify-content: center; gap: 10px; padding: 8px 0; }
         .btn { padding: 8px 16px; font-size: 14px; border-radius: 6px; border: none; color: white; font-weight: bold; cursor: pointer; }
         .btn-rank { background: var(--accent); }
         .btn-print { background: #2563eb; }
-
-        /* 表格顯示 */
         .content { padding: 8px; }
         table { width: 100%; border-collapse: collapse; background: white; table-layout: fixed; }
         th { background: var(--primary); color: white; padding: 12px 2px; font-size: 14px; }
@@ -28,13 +22,9 @@
         .col-info { width: 95px; text-align: left; padding-left: 6px; }
         .name-text { font-size: 15px; font-weight: bold; display: block; white-space: nowrap; }
         .sub-info { font-size: 10px; color: #64748b; display: block; }
-        
         input[type="number"] { width: 44px; height: 36px; border: 1px solid #cbd5e1; border-radius: 4px; text-align: center; font-size: 18px; font-weight: bold; }
-        input.invalid { background-color: var(--invalid); border-color: var(--accent); color: var(--accent); }
         .total-cell { font-weight: bold; color: var(--accent); font-size: 19px; }
-        .error-text { font-size: 12px; color: #94a3b8; }
         .print-val { display: none; }
-
         @media print {
             .no-print, .sticky-header { display: none !important; }
             .print-val { display: inline-block !important; font-size: 16px; font-weight: bold; }
@@ -87,11 +77,11 @@
         {name:"游振鴻", bday:"40.10.13", group:"9-1"}, {name:"傅芳紳", bday:"28.09.26", group:"9-2"}, {name:"傅劉菊香", bday:"36.07.06", group:"9-3"}, {name:"黃全田", bday:"39.09.10", group:"9-4"}, {name:"黃清江", bday:"49.08.23", group:"9-5"}, {name:"廖美芬", bday:"51.12.22", group:"9-6"}, {name:"王榮助", bday:"31.12.03", group:"9-7"}, {name:"楊文祥", bday:"46.05.23", group:"9-8"},
         {name:"張惠真", bday:"45.07.24", group:"10-1"}, {name:"高文鴻", bday:"40.01.15", group:"10-2"}, {name:"張月琴", bday:"45.12.12", group:"10-3"}, {name:"呂犁雲", bday:"43.05.15", group:"10-4"}, {name:"石混生", bday:"34.04.01", group:"10-5"}, {name:"黃學甲", bday:"47.04.01", group:"10-6"}, {name:"呂銘宸", bday:"43.08.01", group:"10-7"}, {name:"張明仁", bday:"40.02.02", group:"10-8"},
         {name:"黃茂樟", bday:"40.09.26", group:"11-1"}, {name:"陳金鑾", bday:"43.03.10", group:"11-2"}, {name:"黃 春", bday:"61.02.13", group:"11-3"}, {name:"鍾寶妹", bday:"50.10.19", group:"11-4"}, {name:"闕金塗", bday:"51.07.27", group:"11-5"}, {name:"吳來旺", bday:"33.11.06", group:"11-6"}, {name:"曾嬌珍", bday:"36.05.24", group:"11-7"}, {name:"吳盛坤", bday:"36.12.01", group:"11-8"},
-        {name:"廖進忠", bday:"38.06.30", group:"12-1"}, {name:"廖 耍", bday:"44.11.08", group:"12-2"}, {name:"孫武復", bday:"36.01.10", group:"12-3"}, {name:"吳柏毅", b5day:"45.01.05", group:"12-4"}, {name:"陳龍文", bday:"39.08.14", group:"12-5"}, {name:"姜彩花", bday:"49.10.19", group:"12-6"}, {name:"李正喜", bday:"30.09.05", group:"12-7"}, {name:"連寬仁", bday:"32.06.03", group:"12-8"}
+        {name:"廖進忠", bday:"38.06.30", group:"12-1"}, {name:"廖 耍", bday:"44.11.08", group:"12-2"}, {name:"孫武復", bday:"36.01.10", group:"12-3"}, {name:"吳柏毅", bday:"45.01.05", group:"12-4"}, {name:"陳龍文", bday:"39.08.14", group:"12-5"}, {name:"姜彩花", bday:"49.10.19", group:"12-6"}, {name:"李正喜", bday:"30.09.05", group:"12-7"}, {name:"連寬仁", bday:"32.06.03", group:"12-8"}
     ];
 
     const STORE_KEY = 'golf_final_validated_v3';
-    let isRankedView = false; // 狀態標記
+    let isRankedView = false;
 
     function init() {
         const tbody = document.getElementById('tableBody');
@@ -120,25 +110,19 @@
     function valRow(el, save = true) {
         const r = el.closest('tr');
         const v1 = r.querySelector('.s1'), v2 = r.querySelector('.s2'), vh = r.querySelector('.hio');
-        const s1 = parseInt(v1.value), s2 = parseInt(v2.value);
+        const s1 = parseInt(v1.value) || 0, s2 = parseInt(v2.value) || 0;
+        const total = s1 + s2;
         const tc = r.querySelector('.total-cell');
 
-        v1.classList.toggle('invalid', v1.value !== '' && s1 < 20);
-        v2.classList.toggle('invalid', v2.value !== '' && s2 < 20);
-
-        let total = (s1 || 0) + (s2 || 0);
-        let isComplete = (v1.value !== '' && v2.value !== '' && s1 >= 20 && s2 >= 20 && total >= 50);
-
+        // 規則：只要總分 > 20 就視為合格
         if (v1.value === '' && v2.value === '') {
-            tc.innerText = "-"; 
+            tc.innerText = "-";
             r.classList.add('invalid-row');
-        } else if (!isComplete) {
-            tc.innerText = (v1.value !== '' && v2.value !== '') ? "不符" : total;
-            tc.classList.add('error-text'); 
+        } else if (total < 20) {
+            tc.innerText = total;
             r.classList.add('invalid-row');
         } else {
-            tc.innerText = total; 
-            tc.classList.remove('error-text'); 
+            tc.innerText = total;
             r.classList.remove('invalid-row');
         }
 
@@ -153,18 +137,12 @@
         }
     }
 
-    // 修復跳轉功能：先還原排序，再跳轉
     function goToGroup(num) {
-        if(isRankedView) {
-            restoreOriginalOrder();
-        }
+        if(isRankedView) restoreOriginalOrder();
         const f = document.querySelector(`.group-row-${num}`);
         if(f) {
             setTimeout(() => {
-                const headerOffset = 140;
-                const elementPosition = f.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                window.scrollTo({ top: f.getBoundingClientRect().top + window.pageYOffset - 140, behavior: 'smooth' });
             }, 50);
         }
     }
@@ -174,7 +152,6 @@
         const rows = Array.from(tbody.querySelectorAll('tr'));
         const orderMap = {};
         players.forEach((p, idx) => orderMap[p.name + p.group] = idx);
-
         rows.sort((a, b) => orderMap[a.getAttribute('data-key')] - orderMap[b.getAttribute('data-key')]);
         tbody.innerHTML = '';
         rows.forEach(r => tbody.appendChild(r));
@@ -186,9 +163,10 @@
     function calculateRank() {
         const rs = Array.from(document.querySelectorAll('#tableBody tr'));
         const dt = rs.map(r => {
-            const s1 = parseInt(r.querySelector('.s1').value), s2 = parseInt(r.querySelector('.s2').value);
-            const t = (s1 || 0) + (s2 || 0);
-            const ok = (r.querySelector('.s1').value !== '' && r.querySelector('.s2').value !== '' && s1 >= 20 && s2 >= 20 && t >= 50);
+            const s1 = parseInt(r.querySelector('.s1').value) || 0;
+            const s2 = parseInt(r.querySelector('.s2').value) || 0;
+            const t = s1 + s2;
+            const ok = t >= 20; // 只要總桿數大於 20 就算完賽
             return { r, t: ok ? t : 99999, h: parseInt(r.querySelector('.hio').value)||0, b: r.getAttribute('data-bday'), ok };
         });
         dt.sort((a,b) => a.t - b.t || b.h - a.h || a.b.localeCompare(b.b));
