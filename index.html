@@ -39,7 +39,7 @@
 
 <div class="sticky-header no-print">
     <div class="nav-bar">
-        <script>for(let i=1; i<=12; i++) document.write(`<button class="nav-btn" onclick="goToGroup(${i})">${i}</button>`);</script>
+        <script>for(let i=1; i<=10; i++) document.write(`<button class="nav-btn" onclick="goToGroup(${i})">${i}</button>`);</script>
     </div>
     <div class="action-bar">
         <button class="btn btn-rank" onclick="calculateRank()">📊 計算排名</button>
@@ -65,7 +65,7 @@
 </div>
 
 <script>
-   const players = [
+    const players = [
         {name:"陳浩華", bday:"39.12.21", group:"1-1"}, {name:"黃麗卿", bday:"33.11.28", group:"1-2"}, {name:"賴建亨", bday:"41.12.18", group:"1-3"}, {name:"柯重雄", bday:"30.03.20", group:"1-4"}, {name:"李日伸", bday:"43.06.05", group:"1-5"}, {name:"林秀美", bday:"49.11.10", group:"1-6"},
         {name:"夏文忠", bday:"47.07.26", group:"2-1"}, {name:"孫武復", bday:"36.01.10", group:"2-2"}, {name:"吳忠政", bday:"60.03.23", group:"2-3"}, {name:"陳 和", bday:"26.02.22", group:"2-4"}, {name:"吳柏毅", bday:"45.01.05", group:"2-5"}, {name:"傅劉菊香", bday:"36.07.06", group:"2-6"},
         {name:"曾有奇", bday:"51.05.20", group:"3-1"}, {name:"涂金葉", bday:"36.08.17", group:"3-2"}, {name:"辜德勝", bday:"41.01.18", group:"3-3"}, {name:"王明山", bday:"35.04.20", group:"3-4"}, {name:"王米吉", bday:"31.03.01", group:"3-5"}, {name:"吳沛柔", bday:"41.05.01", group:"3-6"},
@@ -78,7 +78,7 @@
         {name:"呂銘宸", bday:"43.08.01", group:"10-1"}, {name:"陳鑾鳳", bday:"36.02.02", group:"10-2"}, {name:"莊登章", bday:"39.08.28", group:"10-3"}, {name:"傅元金", bday:"34.11.01", group:"10-4"}, {name:"姜彩花", bday:"49.10.19", group:"10-5"}, {name:"黃 春", bday:"61.02.13", group:"10-6"}, {name:"曾嬿珍", bday:"36.05.24", group:"10-7"}
     ];
 
-    const STORE_KEY = 'golf_final_validated_v3';
+    const STORE_KEY = 'golf_mother_day_115';
     let isRankedView = false;
 
     function init() {
@@ -112,7 +112,6 @@
         const total = s1 + s2;
         const tc = r.querySelector('.total-cell');
 
-        // 規則：只要總分 > 20 就視為合格
         if (v1.value === '' && v2.value === '') {
             tc.innerText = "-";
             r.classList.add('invalid-row');
@@ -164,7 +163,7 @@
             const s1 = parseInt(r.querySelector('.s1').value) || 0;
             const s2 = parseInt(r.querySelector('.s2').value) || 0;
             const t = s1 + s2;
-            const ok = t >= 20; // 只要總桿數大於 20 就算完賽
+            const ok = t >= 20; 
             return { r, t: ok ? t : 99999, h: parseInt(r.querySelector('.hio').value)||0, b: r.getAttribute('data-bday'), ok };
         });
         dt.sort((a,b) => a.t - b.t || b.h - a.h || a.b.localeCompare(b.b));
